@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: student-analytics-dashboard
+    env: node
+    plan: free
+    buildCommand: npm ci && npm run build
+    startCommand: npm run server
+    buildFilter:
+      paths:
+      - package.json
+      - package-lock.json
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: VITE_MONGODB_URI
+        fromDatabase:
+          name: mongodb
+          property: connectionString
+      - key: VITE_GOOGLE_SPREADSHEET_ID
+        value: 1TggXSG9WbKut8PSD8f6_c3KNtFyFt49CSpnwIis_pBA
+      - key: VITE_ENROLLMENT_CSV_URL
+        value: https://docs.google.com/spreadsheets/d/1TggXSG9WbKut8PSD8f6_c3KNtFyFt49CSpnwIis_pBA/export?format=csv&gid=542375196

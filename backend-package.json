@@ -1,0 +1,19 @@
+{
+  "name": "student-analytics-backend",
+  "version": "1.0.0",
+  "description": "Backend server for Student Analytics Dashboard with Google Sheets integration",
+  "main": "test-server.js",
+  "scripts": {
+    "start": "node test-server.js",
+    "dev": "nodemon test-server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "node-fetch": "^2.7.0",
+    "mongodb": "^6.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
