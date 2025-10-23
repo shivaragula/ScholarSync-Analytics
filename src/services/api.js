@@ -9,6 +9,55 @@ const getApiBaseUrl = () => {
   return import.meta.env.VITE_API_BASE_URL || 'http://localhost:8001';
 };
 
+// Direct Google Sheets data fetching for production
+const fetchGoogleSheetsDirectly = async () => {
+  try {
+    const csvUrl = import.meta.env.VITE_ENROLLMENT_CSV_URL;
+    if (!csvUrl) {
+      throw new Error('Google Sheets CSV URL not configured');
+    }
+
+    const response = await fetch(csvUrl);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch Google Sheets data: ${response.status}`);
+    }
+
+    const csvText = await response.text();
+    const lines = csvText.split('\n');
+    const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+    
+    const data = [];
+    for (let i = 1; i < lines.length; i++) {
+      if (lines[i].trim()) {
+        const values = lines[i].split(',').map(v => v.trim().replace(/"/g, ''));
+        const row = {};
+        headers.forEach((header, index) => {
+          row[header] = values[index] || '';
+        });
+        data.push({
+          id: i,
+          studentName: row['Student Name'] || row['Name'] || `Student ${i}`,
+          email: row['Email Address'] || row['Email'] || `student${i}@email.com`,
+          course: row['Package'] || row['Course'] || 'Unknown Course',
+          category: row['Activity'] || row['Category'] || 'General',
+          enrollmentDate: row['Start Date'] || row['Enrollment Date'] || new Date().toISOString().split('T')[0],
+          status: row['Status'] || 'Active',
+          progress: parseInt(row['Progress'] || Math.floor(Math.random() * 100)),
+          paymentStatus: (row['Fees Paid Amount'] && row['Fees Paid Amount'] !== '0') ? 'Paid' : 'Pending',
+          feesPaid: parseFloat(row['Fees Paid Amount'] || 0),
+          phone: row['WhatsApp Phone Number'] || '',
+          ...row
+        });
+      }
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error fetching Google Sheets directly:', error);
+    throw error;
+  }
+};
+
 const API_BASE_URL = getApiBaseUrl();
 
 console.log('🔧 API Service initialized with base URL:', API_BASE_URL);
