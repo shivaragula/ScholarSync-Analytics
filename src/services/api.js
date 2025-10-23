@@ -1,8 +1,8 @@
 // API Service for backend integration
 const getApiBaseUrl = () => {
-  // In production, use the same domain as the frontend
+  // In production, use the environment variable or same domain
   if (import.meta.env.PROD) {
-    return window.location.origin;
+    return import.meta.env.VITE_API_BASE_URL || window.location.origin;
   }
   
   // In development, use the environment variable or localhost
