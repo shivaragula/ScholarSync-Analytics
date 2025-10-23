@@ -24,27 +24,13 @@ This guide will help you deploy your **ScholarSync Analytics** project to Vercel
 
 ### 1.2 Update Vercel Configuration
 
-The optimized `vercel.json` is already configured in your project:
+The optimized `vercel.json` is already configured in your project (simplified for better compatibility):
 
 ```json
 {
-  "version": 2,
-  "framework": "vite",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "installCommand": "npm ci",
-  "functions": {
-    "api/index.js": {
-      "runtime": "nodejs18.x",
-      "maxDuration": 30
-    }
-  },
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/index.js"
-    }
-  ],
   "headers": [
     {
       "source": "/api/(.*)",
@@ -60,16 +46,18 @@ The optimized `vercel.json` is already configured in your project:
         {
           "key": "Access-Control-Allow-Headers",
           "value": "Content-Type, Authorization"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "s-maxage=60, stale-while-revalidate"
         }
       ]
     }
   ]
 }
 ```
+
+**Key Features:**
+- ✅ **Simplified configuration** - No complex runtime specifications
+- ✅ **Direct Google Sheets integration** - Fetches data directly from your sheets
+- ✅ **Fallback mechanism** - Works even without backend API
+- ✅ **CORS headers** - Proper cross-origin handling
 
 ---
 
